@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    restart: always
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      # Django settings
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - DJANGO_DEBUG=${DJANGO_DEBUG:-False}
+      - DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1}
+      - DJANGO_LOG_LEVEL=${DJANGO_LOG_LEVEL:-INFO}
+
+      # Database settings
+      - POSTGRES_DB=${POSTGRES_DB:-eth_faucet}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - POSTGRES_HOST=${POSTGRES_HOST:-db}
+      - POSTGRES_PORT=${POSTGRES_PORT:-5432}
+
+      # Redis settings
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+
+      # Ethereum settings
+      - ETHEREUM_PROVIDER_URL=${ETHEREUM_PROVIDER_URL}
+      - ETHEREUM_FALLBACK_PROVIDERS=${ETHEREUM_FALLBACK_PROVIDERS:-}
+      - ETHEREUM_PRIVATE_KEY=${ETHEREUM_PRIVATE_KEY}
+      - ETHEREUM_FROM_ADDRESS=${ETHEREUM_FROM_ADDRESS}
+      - ETHEREUM_CHAIN_ID=${ETHEREUM_CHAIN_ID:-11155111}
+      - ETHEREUM_MAX_RETRIES=${ETHEREUM_MAX_RETRIES:-3}
+      - ETHEREUM_RETRY_DELAY=${ETHEREUM_RETRY_DELAY:-1.0}
+
+      # Faucet settings
+      - FAUCET_AMOUNT=${FAUCET_AMOUNT:-0.0001}
+      - RATE_LIMIT_TIMEOUT=${RATE_LIMIT_TIMEOUT:-60}
+      - USE_TRANSACTION_QUEUE=${USE_TRANSACTION_QUEUE:-True}
+    volumes:
+      - ./:/app
+      - static_volume:/app/staticfiles
+
+  db:
+    image: postgres:15-alpine
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-eth_faucet}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data:
+  redis_data:
+  static_volume:
