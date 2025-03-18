@@ -74,6 +74,17 @@ make superuser
 # Access the admin interface at http://localhost:8000/admin/
 ```
 
+## Future Enhancements
+
+The current implementation satisfies all core requirements. For future development, consider:
+
+- **Simple Frontend Interface**: Add a web UI for users to request ETH without direct API interaction
+- **Webhook Notifications**: Implement a webhook system to notify applications about transaction status changes
+- **Metrics and Monitoring**: Add Prometheus metrics for monitoring faucet usage, performance, and wallet balance
+- **Multiple Testnet Support**: Extend functionality to other Ethereum testnets beyond Sepolia
+- **Enhanced Rate Limiting**: Implement more sophisticated anti-abuse mechanisms (e.g., captcha integration)
+- **Admin Dashboard**: Create a management interface for monitoring transactions and faucet balance
+
 ## Troubleshooting
 
 ### Common Issues
@@ -96,4 +107,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! 
