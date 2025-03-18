@@ -30,25 +30,18 @@ The application follows a modular architecture with the following components:
 
 ## Quick Start
 
-1. **Clone the repository**
+```bash
+# Setup, build and start the application (creates .env file, builds containers, starts services)
+make all
 
-2. **Create a .env file from the example**
-   ```bash
-   cp .env.example .env
-   ```
+# View application logs
+make logs
 
-3. **Configure your Ethereum credentials**
-   - Edit the `.env` file with your Sepolia wallet private key and RPC URLs
+# Run tests
+make test
+```
 
-4. **Build and run the application**
-   ```bash
-   docker-compose up -d
-   ```
-
-5. **Check if the services are running**
-   ```bash
-   docker-compose ps
-   ```
+Run `make help` to see all available commands.
 
 ## Usage Examples
 
@@ -57,7 +50,7 @@ The application follows a modular architecture with the following components:
 ```bash
 curl -X POST http://localhost:8000/faucet/fund/ \
   -H "Content-Type: application/json" \
-  -d '{"wallet_address": "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"}'
+  -d '{"wallet_address": "0x********"}'
 ```
 
 ### Get Statistics
@@ -68,72 +61,18 @@ curl http://localhost:8000/faucet/stats/
 
 For more detailed API documentation, see [API_DOCUMENTATION.md](API_DOCUMENTATION.md).
 
-## Configuration Options
-
-The application can be configured through environment variables in the `.env` file:
-
-### Django Settings
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| DJANGO_SECRET_KEY | Secret key for Django | random string |
-| DJANGO_DEBUG | Enable debug mode | False |
-| DJANGO_ALLOWED_HOSTS | Comma-separated list of allowed hosts | localhost,127.0.0.1 |
-| DJANGO_LOG_LEVEL | Logging level | INFO |
-
-### Database Settings
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| POSTGRES_DB | PostgreSQL database name | eth_faucet |
-| POSTGRES_USER | PostgreSQL username | postgres |
-| POSTGRES_PASSWORD | PostgreSQL password | postgres |
-| POSTGRES_HOST | PostgreSQL host | db |
-| POSTGRES_PORT | PostgreSQL port | 5432 |
-
-### Redis Settings
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| REDIS_HOST | Redis host | redis |
-| REDIS_PORT | Redis port | 6379 |
-
-### Ethereum Settings
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| ETHEREUM_PROVIDER_URL | Primary Ethereum RPC URL | https://sepolia.infura.io/v3/... |
-| ETHEREUM_FALLBACK_PROVIDERS | Comma-separated fallback RPC URLs | empty |
-| ETHEREUM_PRIVATE_KEY | Private key for the faucet wallet | required |
-| ETHEREUM_FROM_ADDRESS | Address of the faucet wallet | required |
-| ETHEREUM_CHAIN_ID | Chain ID for Sepolia | 11155111 |
-| ETHEREUM_MAX_RETRIES | Maximum retry attempts for RPC calls | 3 |
-| ETHEREUM_RETRY_DELAY | Delay between retries in seconds | 1.0 |
-
-### Faucet Settings
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| FAUCET_AMOUNT | Amount of ETH to send per request | 0.0001 |
-| RATE_LIMIT_TIMEOUT | Timeout in seconds between requests | 60 |
-| USE_TRANSACTION_QUEUE | Use async queue for transactions | True |
+For configuration options, see [CONFIG.md](CONFIG.md).
 
 ## Development
 
-### Running Tests
-
-```bash
-docker-compose exec web python manage.py test
-```
-
 ### Accessing Admin Interface
 
-1. Create a superuser:
-   ```bash
-   docker-compose exec web python manage.py createsuperuser
-   ```
+```bash
+# Create a superuser
+make superuser
 
-2. Access the admin interface at `http://localhost:8000/admin/`
+# Access the admin interface at http://localhost:8000/admin/
+```
 
 ## Troubleshooting
 
@@ -150,14 +89,6 @@ docker-compose exec web python manage.py test
 3. **Rate Limiting Problems**
    - Adjust the `RATE_LIMIT_TIMEOUT` if needed
    - Check Redis connection for rate limiting storage
-
-### Logs
-
-To view logs from the application:
-
-```bash
-docker-compose logs -f web
-```
 
 ## License
 
